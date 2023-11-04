@@ -21,7 +21,7 @@ pipeline {
         
         stage('docker_build') {
             steps {
-             sh "docker build -t mukesh92/speed2:${BUILD_NUMBER} ."
+             sh "docker build -t mukesh92/speed3:${BUILD_NUMBER} ."
             }
         }    
         stage('docker_push') {
@@ -29,7 +29,7 @@ pipeline {
                 withCredentials([string(credentialsId: 'dockerhubpwd', variable: 'dokcerhubpwd')]) {
                 sh "docker login -umukesh92 -p ${dokcerhubpwd}"
                 }
-                sh "docker push mukesh92/speed2:${BUILD_NUMBER}"
+                sh "docker push mukesh92/speed3:${BUILD_NUMBER}"
             }
         }
         stage('Deployk8s'){
