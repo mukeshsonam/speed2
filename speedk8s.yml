@@ -18,7 +18,7 @@ spec:
     spec:
      containers:
       - name: speed
-        image: ${IMAGE_REPO}/${NAME}:${VERSION}
+        image: mukesh92/speed2
         ports:
           - containerPort: 8080
 ---
