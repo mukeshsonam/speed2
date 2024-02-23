@@ -36,12 +36,12 @@ pipeline {
             }
         }
         
-        stage('k8s-deploy') {
-            steps {
-              withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8stoken', namespace: 'jenkins', restrictKubeConfigAccess: false, serverUrl: 'https://172.31.46.212:6443') {
-              sh "kubectl apply -f speedk8s.yml"
-              sh 'kubectl set image deployments/speed speed=mukesh92/speed3:${BUILD_NUMBER}'
-              }  
+        stage('Deployk8s'){
+            steps{
+            withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8stoken', namespace: 'jenkins', restrictKubeConfigAccess: false, serverUrl: 'https://172.31.40.170:6443') {
+            sh "kubectl apply -f speedk8s.yml"
+            sh 'kubectl set image deployments/speed speed=mukesh92/speed3:${BUILD_NUMBER}'
+              }
             }
         }
     }
