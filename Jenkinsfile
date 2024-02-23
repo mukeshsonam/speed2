@@ -21,9 +21,12 @@ pipeline {
         
         stage('docker_build') {
             steps {
-             sh "docker build -t mukesh92/speed3:${BUILD_NUMBER} ."
+                script{
+                  sh "docker build -t mukesh92/speed3:${BUILD_NUMBER} ."
+               }
             }
-        }    
+        }
+        
         stage('docker_push') {
             steps {
                 withCredentials([string(credentialsId: 'dockerhubpwd', variable: 'dokcerhubpwd')]) {
@@ -32,12 +35,13 @@ pipeline {
                 sh "docker push mukesh92/speed3:${BUILD_NUMBER}"
             }
         }
-        stage('Deployk8s'){
-            steps{
-                script{
-                    kubernetesDeploy (configs: 'speedk8s.yml', kubeconfigId: 'k8scfg')
-                    
-                }
+        
+        stage('k8s-deploy') {
+            steps {
+              withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8stoken', namespace: 'jenkins', restrictKubeConfigAccess: false, serverUrl: 'https://172.31.46.212:6443') {
+              sh "kubectl apply -f speedk8s.yml"
+              sh 'kubectl set image deployments/speed speed=mukesh92/speed3:${BUILD_NUMBER}'
+              }  
             }
         }
     }
